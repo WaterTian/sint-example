@@ -238,7 +238,7 @@ function createPart2() {
 		});
 
 
-		SINT.magic.doDye(ac1, 0x00ff00);
+		// SINT.magic.doDye(ac1, 0x00ff00);
 
 		SINT.Audios.get('sound1').play();
 
@@ -258,10 +258,6 @@ var mouseFilter = new SINT.magic.BulgePinchFilter([0.5, 0.5], 200, 1.2);
 
 function onDragStart(event) {
 	this.dragging = true
-	game.stage.filters = [mouseFilter];
-	mouseFilter.center = [event.data.global.x / 750, event.data.global.y / 1334];
-
-
 }
 
 function onDragEnd(event) {
@@ -273,7 +269,8 @@ function onDragEnd(event) {
 
 function onDragMove(event) {
 	if (this.dragging) {
-		mouseFilter.center = [event.data.global.x / 750, event.data.global.y / 1334];
+		game.stage.filters = [mouseFilter];
+		mouseFilter.center = [event.data.global.x / game.initWidth, event.data.global.y / game.initHeight];
 		mouseFilter.radius += (200 - mouseFilter.radius) * 0.8;
 	}
 }
