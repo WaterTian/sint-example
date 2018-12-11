@@ -1,4 +1,4 @@
-import * as SINT from 'sint.js'
+// import * as SINT from 'sint.js'
 import VConsole from 'vconsole'
 
 const vConsole = new VConsole();
