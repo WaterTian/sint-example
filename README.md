@@ -3,7 +3,8 @@ sint.js - examples
 
 ## Learn
 
-- Docs: SintJS API [docs](https://watertian.github.io/sint.js/docs/).
+- API [docs](https://watertian.github.io/sint.js/docs/).
+- [demo](https://watertian.github.io/sint-example/).
 
 ## Usage
 
