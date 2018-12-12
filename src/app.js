@@ -54,7 +54,7 @@ function loading(e) {
 function create() {
 	game.remove(loadingTxt)
 
-	console.log(SINT.TyLoader.resources);
+	console.log(SINT.loader.resources);
 
     // audio
     var s0 = SINT.Audios.add('sound0');
@@ -229,13 +229,15 @@ function createPart2() {
 				ac1.stop();
 			}
 		});
-
-
 		// SINT.magic.doDye(ac1, 0x00ff00);
-
 		SINT.Audios.get('sound1').play();
-
 	})
+
+	var ac2 = new SINT.AnimatedClip(600, 1000, ['fish1','fish2','fish3','fish4']);
+	game.add(ac2);
+	ac2.anchor.set(0.5);
+	ac2.animationSpeed = 3 / 60;
+	ac2.play();
 
 }
 
