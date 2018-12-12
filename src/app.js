@@ -117,7 +117,17 @@ function create() {
 		s0.play();
 	})
 
-
+	//Text
+	var t = new SINT.TextClip(500, 200, 'Video', {
+		fontFamily: 'Arial',
+		fontSize: 50,
+		fontStyle: 'italic',
+		fontWeight: 'bold',
+		fill: '#ffffff', 
+	});
+	game.add(t);
+	t.interactive = true;
+	t.on('pointerdown',initVideo);
 
 	var fishBounds = new SINT.Rectangle(-100, -100,
 		game.initWidth + 100 * 2, game.initHeight + 100 * 2);
@@ -271,10 +281,23 @@ function onDragMove(event) {
 }
 
 
+function initVideo(){
+	var videoContainer = document.querySelector('#videoContainer');
+	var video1 = new SINT.VideoDom({
+		parentElement: videoContainer,
+		videoUrl: './assets/video/dino.mp4',
+		posterImg: './assets/video/dino.jpg'
+	});
 
-// if(document.body)_init();
-// else window.addEventListener('load', ()=>_init());
-// function _init() {}
+	video1.toPlay();
 
+	video1.videoElement.addEventListener('click', function() {
+		video1.destroy();
+	});
+
+	video1.on('ended', function(e) {
+		video1.destroy();
+	})
+}
 
 
