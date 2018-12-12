@@ -25,7 +25,6 @@ const assets2 = {
 	icon1: './assets/icon1.png',
 	pic2: './assets/pic2.png',
 	fighter: './assets/fighter.json',
-	spineboy: './assets/spineboy.json',
 }
 
 
@@ -51,18 +50,9 @@ function loading(e) {
 	loadingTxt.text = Math.floor(e.progress) + '%'
 }
 
-function removeLoading() {
-	SINT.Tween.to(loadingTxt, 0.6, {
-		alpha: 0,
-		ease: Strong.easeOut,
-		onComplete: function() {
-			game.remove(loadingTxt)
-		}
-	})
-}
 
 function create() {
-	removeLoading();
+	game.remove(loadingTxt)
 
 	console.log(SINT.TyLoader.resources);
 
@@ -176,7 +166,7 @@ function initPart2() {
 }
 
 function createPart2() {
-	removeLoading();
+	game.remove(loadingTxt)
 	
 	//btn
 	var btn2 = new SINT.SpriteClip(28, 900, 'pic2');
