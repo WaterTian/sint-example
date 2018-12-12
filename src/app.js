@@ -1,6 +1,5 @@
 // import * as SINT from 'sint.js'
 import VConsole from 'vconsole'
-
 const vConsole = new VConsole();
 
 const config = {
@@ -47,9 +46,9 @@ game.preload({
 	loaded: create,
 })
 
-function loading(_pr) {
-	console.log("loading1_" + _pr)
-	loadingTxt.text = _pr + '%'
+function loading(e) {
+	console.log("loading1_" + e.progress)
+	loadingTxt.text = Math.floor(e.progress) + '%'
 }
 
 function removeLoading() {
@@ -165,16 +164,20 @@ var part2 = false;
 function initPart2() {
 	if (part2) return;
 	part2 = true;
+	game.add(loadingTxt)
 	game.preload({
 		assets: assets2,
-		loading: function(_pr) {
-			console.log("loading2_" + _pr)
+		loading: function(e) {
+			console.log("loading2_" + e.progress)
+			loadingTxt.text = Math.floor(e.progress) + '%'
 		},
 		loaded: createPart2,
 	})
 }
 
 function createPart2() {
+	removeLoading();
+	
 	//btn
 	var btn2 = new SINT.SpriteClip(28, 900, 'pic2');
 	btn2.addChild(new SINT.TextClip(180, 56, '卸载'));
