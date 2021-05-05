@@ -33,8 +33,8 @@
 		"webpack-glsl-loader": "^1.0.1"
 	},
 	"dependencies": {
-		"sint.js": "0.0.10",
-		"vconsole": "^3.2.0"
+		"sint.js": "0.0.12",
+		"vconsole": "^3.5.0"
 	},
 	"babel": {
 		"presets": [

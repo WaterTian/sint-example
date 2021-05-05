@@ -1,6 +1,7 @@
-// import * as SINT from 'sint.js'
-import VConsole from 'vconsole'
-const vConsole = new VConsole();
+import VConsole from 'vconsole';
+var vConsole = new VConsole();
+
+
 
 const config = {
 	domElement: document.querySelector('#webglContainer'), // 画布容器
@@ -8,6 +9,7 @@ const config = {
 	initHeight: 1334,
 	showFPS: true,
 	backgroundColor: 0x2a3145,
+	// transparent: true,
 };
 
 const assets1 = {
@@ -27,6 +29,7 @@ const assets2 = {
 	fighter: './assets/fighter.json',
 }
 
+// console.log(SINT);
 
 var game = new SINT.Game(config);
 
@@ -47,7 +50,7 @@ game.preload({
 
 function loading(e) {
 	console.log("loading1_" + e.progress)
-	loadingTxt.text = Math.floor(e.progress) + '%'
+	loadingTxt.text = e.progress + '%'
 }
 
 
@@ -56,27 +59,45 @@ function create() {
 
 	console.log(SINT.loader.resources);
 
-    // audio
-    var s0 = SINT.Audios.add('sound0');
-    s0.loop=true;
-    SINT.Audios.add('sound1');
+	// audio
+	var s0 = SINT.Audios.add('sound0');
+	s0.loop = true;
+	SINT.Audios.add('sound1');
 
-	//bg image
-	var bg = new SINT.SpriteClip(0, 0, 'bg');
-	game.add(bg);
+	// setTimeout(function(){
+	// 	s1.play();
+	// },5000)
+
+	// let s1 = new SINT.Sound(SINT.loader.resources.sound0);
+	// s1.play();
+	// console.log(s1);
+
+
+	// //bg image
+	// var bg = new SINT.SpriteClip(0, 0, 'bg');
+	// game.add(bg);
+
+	var bg = new SINT.Container();
+	bg.filterArea = new SINT.Rectangle(0, 0, game.initWidth, game.initHeight);
+	game.addChild(bg);
+	var bg_filter = new SINT.magic.HolesFilter(0x4a778a, 0xf3f9f1, 0.1, 0.5, 1);
+	bg.filters = [bg_filter];
+
+
 
 	//Container
 	var fishsContainer = new SINT.Container();
-	game.add(fishsContainer);
-	SINT.magic.doTwist(fishsContainer, [500, 500], 400, 2, false);
+	game.addChild(fishsContainer);
+	// SINT.magic.doTwist(fishsContainer, [500, 500], 400, 2, false);
+	SINT.magic.doDisplacement(fishsContainer, 0.8, 0.2, 1.5, 5);
 
 
 	var fishs = [];
-	for (var i = 0; i < 2000; i++) {
+	for (var i = 0; i < 1000; i++) {
 		var id = 'fish' + ((i % 4) + 1);
 		var fish = new SINT.SpriteClip(0, 0, id);
 		fish.tint = Math.random() * 0xff3300;
-		fish.alpha = 0.3 + Math.random() * 0.8;
+		fish.alpha = 0.2 + Math.random() * 0.5;
 		fish.anchor.set(0.5);
 		fish.scale.set(0.2 + Math.random() * 0.2);
 		// scatter them all
@@ -92,16 +113,20 @@ function create() {
 	}
 
 	//btn
-	var btn1 = new SINT.SpriteClip(288, 292, 'pic1');
-	game.add(btn1);
+	var btns = new SINT.Container();
+	game.addChild(btns);
+	var btnss = new SINT.Container();
+	btns.addChild(btnss);
+	var btn1 = new SINT.SpriteClip(290, 100, 'pic1');
+	btnss.addChild(btn1);
 	btn1.anchor.set(0.5);
 	btn1.interactive = true;
-	btn1.on('pointerdown', function() {
+	btn1.on('pointerdown', function () {
 		SINT.Tween.to(btn1.scale, .6, {
 			x: 1.2,
 			y: 1.2,
 			ease: Elastic.easeOut,
-			onComplete: function() {
+			onComplete: function () {
 				SINT.Tween.to(btn1.scale, .4, {
 					x: 1,
 					y: 1,
@@ -110,30 +135,40 @@ function create() {
 				initPart2();
 
 				// SINT.magic.doTwist(game.stage, [400, 800], 600, 2, true);
-				SINT.magic.doGlitch(game.stage,2,true);
+				SINT.magic.doGlitch(game.stage, 2, true);
 			}
 		});
 
 		s0.play();
 	})
 
+
+
+
+	SINT.Tween.to(btn1, 1, {
+		y: 300,
+		ease: Power1.easeInOut,
+		repeat: -1,
+	});
+
 	//Text
-	var t = new SINT.TextClip(500, 200, 'Video', {
+	var t = new SINT.TextClip(600, 100, 'Video', {
 		fontFamily: 'Arial',
-		fontSize: 50,
+		fontSize: 30,
 		fontStyle: 'italic',
 		fontWeight: 'bold',
-		fill: '#ffffff', 
+		fill: '#000000',
 	});
 	game.add(t);
 	t.interactive = true;
-	t.on('pointerdown',initVideo);
+	t.on('pointerdown', initVideo);
+
 
 	var fishBounds = new SINT.Rectangle(-100, -100,
 		game.initWidth + 100 * 2, game.initHeight + 100 * 2);
 
 	//update
-	game.ticker.add(function() {
+	game.ticker.add(function () {
 		//fish
 		for (var i = 0; i < fishs.length; i++) {
 			var fish = fishs[i];
@@ -159,43 +194,52 @@ function create() {
 
 
 
+
 var part2 = false;
 
 function initPart2() {
 	if (part2) return;
 	part2 = true;
+	console.log("preload2")
 	game.add(loadingTxt)
 	game.preload({
 		assets: assets2,
-		loading: function(e) {
+		loading: function (e) {
 			console.log("loading2_" + e.progress)
-			loadingTxt.text = Math.floor(e.progress) + '%'
 		},
 		loaded: createPart2,
 	})
 }
 
 function createPart2() {
+	console.log("createPart2")
 	game.remove(loadingTxt)
-	
+
 	//btn
-	var btn2 = new SINT.SpriteClip(28, 900, 'pic2');
-	btn2.addChild(new SINT.TextClip(180, 56, '卸载'));
+	var btn2 = new SINT.SpriteClip(28, 700, 'pic2');
+	btn2.addChild(new SINT.TextClip(60, 56, '卸载'));
 	game.add(btn2);
 	btn2.interactive = true;
-	btn2.on('pointerdown', function() {
+	btn2.on('pointerdown', function () {
 		game.removeThis();
+
+		game = new SINT.Game(config);
+		game.preload({
+			assets: assets1,
+			loading: loading,
+			loaded: create,
+		})
 	})
 
 	//icon1
-	var icon1 = new SINT.SpriteClip(28, 1100, 'icon1');
+	var icon1 = new SINT.SpriteClip(28, 900, 'icon1');
 	game.add(icon1);
-	var icon2 = new SINT.SpriteClip(228, 1100, 'icon1');
+	var icon2 = new SINT.SpriteClip(228, 900, 'icon1');
 	game.add(icon2);
 	SINT.magic.doDye(icon2, 0x7067c5);
 
 	//Text
-	var t1 = new SINT.TextClip(30, 600, 'Game1 * -> 课前游戏 -> 1234文本', {
+	var t1 = new SINT.TextClip(30, 500, 'Game1 * ->   游戏 ->', {
 		fontFamily: 'Arial',
 		fontSize: 50,
 		fontStyle: 'italic',
@@ -216,41 +260,50 @@ function createPart2() {
 
 
 	//Animated
-	var ac1 = new SINT.AnimatedClip(400, 600, 'fighter');
+	var ac1 = new SINT.AnimatedClip(600, 400, 'fighter');
 	game.add(ac1);
 	ac1.anchor.set(0.5);
-	ac1.animationSpeed = 40 / 60;;
+	ac1.animationSpeed = 40 / 60;
 	ac1.interactive = true;
-	ac1.on('pointerdown', function() {
+	ac1.on('pointerdown', function () {
 		console.log("fly")
 		ac1.play();
 		SINT.Tween.to(ac1, 1, {
 			y: -150,
 			ease: Strong.easeOut,
-			onComplete: function() {
+			onComplete: function () {
 				ac1.y = game.initHeight;
 			}
 		});
 		SINT.Tween.to(ac1, 2, {
-			y: 600,
+			y: 400,
 			delay: 1,
 			ease: Strong.easeInOut,
-			onComplete: function() {
+			onComplete: function () {
 				ac1.stop();
 			}
 		});
-		// SINT.magic.doDye(ac1, 0x00ff00);
+
+
+		SINT.magic.doDye(ac1, 0x00ff00);
+
 		SINT.Audios.get('sound1').play();
 	})
 
-	var ac2 = new SINT.AnimatedClip(600, 1000, ['fish1','fish2','fish3','fish4']);
+
+
+	var ac2 = new SINT.AnimatedClip(600, 600, ['fish1', 'fish2', 'fish3', 'fish4']);
 	game.add(ac2);
 	ac2.anchor.set(0.5);
-	ac2.animationSpeed = 3 / 60;
+	ac2.animationSpeed = 10 / 60;
 	ac2.play();
+
+
 
 }
 
+
+var mouseFilter = new SINT.magic.BulgePinchFilter([0.5, 0.5], 200, 1.2);
 
 game.stage.interactive = true
 game.stage
@@ -259,10 +312,12 @@ game.stage
 	.on('pointerupoutside', onDragEnd)
 	.on('pointermove', onDragMove)
 
-var mouseFilter = new SINT.magic.BulgePinchFilter([0.5, 0.5], 200, 1.2);
 
 function onDragStart(event) {
 	this.dragging = true
+	this.startPoint = event.data.global.clone();
+	game.stage.filters = [mouseFilter];
+	mouseFilter.center = [this.startPoint.x / game.initWidth, this.startPoint.y / game.initHeight];
 }
 
 function onDragEnd(event) {
@@ -274,14 +329,22 @@ function onDragEnd(event) {
 
 function onDragMove(event) {
 	if (this.dragging) {
-		game.stage.filters = [mouseFilter];
-		mouseFilter.center = [event.data.global.x / game.initWidth, event.data.global.y / game.initHeight];
+		this.toPoint = event.data.global.clone();
+		// let angle = SINT.Unit.getPointAngle(this.startPoint,this.toPoint);
+		// console.log(angle);
+
+		mouseFilter.center = [this.toPoint.x / game.initWidth, this.toPoint.y / game.initHeight];
 		mouseFilter.radius += (200 - mouseFilter.radius) * 0.8;
 	}
+
 }
 
 
-function initVideo(){
+
+
+
+
+function initVideo() {
 	var videoContainer = document.querySelector('#videoContainer');
 	var video1 = new SINT.VideoDom({
 		parentElement: videoContainer,
@@ -291,13 +354,11 @@ function initVideo(){
 
 	video1.toPlay();
 
-	video1.videoElement.addEventListener('click', function() {
+	video1.videoElement.addEventListener('click', function () {
 		video1.destroy();
 	});
 
-	video1.on('ended', function(e) {
+	video1.on('ended', function (e) {
 		video1.destroy();
 	})
 }
-
-
