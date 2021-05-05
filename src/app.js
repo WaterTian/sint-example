@@ -73,23 +73,16 @@ function create() {
 	// console.log(s1);
 
 
-	// //bg image
-	// var bg = new SINT.SpriteClip(0, 0, 'bg');
-	// game.add(bg);
-
-	var bg = new SINT.Container();
-	bg.filterArea = new SINT.Rectangle(0, 0, game.initWidth, game.initHeight);
-	game.addChild(bg);
-	var bg_filter = new SINT.magic.HolesFilter(0x4a778a, 0xf3f9f1, 0.1, 0.5, 1);
-	bg.filters = [bg_filter];
-
-
+	//bg image
+	var bg = new SINT.SpriteClip(0, 0, 'bg');
+	game.add(bg);
 
 	//Container
 	var fishsContainer = new SINT.Container();
-	game.addChild(fishsContainer);
+	bg.addChild(fishsContainer);
 	// SINT.magic.doTwist(fishsContainer, [500, 500], 400, 2, false);
-	SINT.magic.doDisplacement(fishsContainer, 0.8, 0.2, 1.5, 5);
+
+	SINT.magic.doDisplacement(bg, 0.6, 0.2, 1.5, 5);
 
 
 	var fishs = [];
