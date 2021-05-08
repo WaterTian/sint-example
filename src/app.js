@@ -33,25 +33,23 @@ const assets2 = {
 
 var game = new SINT.Game(config);
 
-var loadingTxt = new SINT.TextClip(game.initWidth / 2, 600, '0%', {
+var loadingTxt = new SINT.TextClip('0%', game.initWidth / 2, 600, {
 	fontFamily: 'Arial',
 	fontSize: 42,
 	fontWeight: 'bold',
 	fill: ['#d2497d', '#5a7cd3']
-})
+});
 loadingTxt.anchor.set(0.5)
 game.add(loadingTxt)
 
 game.preload({
 	assets: assets1,
-	loading: loading,
+	loading: (e) => {
+		loadingTxt.text = Math.floor(e.progress) + '%'
+	},
 	loaded: create,
 })
 
-function loading(e) {
-	console.log("loading1_" + e.progress)
-	loadingTxt.text = e.progress + '%'
-}
 
 
 function create() {
@@ -74,7 +72,7 @@ function create() {
 
 
 	//bg image
-	var bg = new SINT.SpriteClip(0, 0, 'bg');
+	var bg = new SINT.SpriteClip('bg');
 	game.add(bg);
 
 	//Container
@@ -88,7 +86,7 @@ function create() {
 	var fishs = [];
 	for (var i = 0; i < 1000; i++) {
 		var id = 'fish' + ((i % 4) + 1);
-		var fish = new SINT.SpriteClip(0, 0, id);
+		var fish = new SINT.SpriteClip(id);
 		fish.tint = Math.random() * 0xff3300;
 		fish.alpha = 0.2 + Math.random() * 0.5;
 		fish.anchor.set(0.5);
@@ -110,7 +108,7 @@ function create() {
 	game.addChild(btns);
 	var btnss = new SINT.Container();
 	btns.addChild(btnss);
-	var btn1 = new SINT.SpriteClip(290, 100, 'pic1');
+	var btn1 = new SINT.SpriteClip('pic1', 290, 100);
 	btnss.addChild(btn1);
 	btn1.anchor.set(0.5);
 	btn1.interactive = true;
@@ -145,7 +143,7 @@ function create() {
 	});
 
 	//Text
-	var t = new SINT.TextClip(600, 100, 'Video', {
+	var t = new SINT.TextClip('Video', 600, 100, {
 		fontFamily: 'Arial',
 		fontSize: 30,
 		fontStyle: 'italic',
@@ -197,7 +195,7 @@ function initPart2() {
 	game.add(loadingTxt)
 	game.preload({
 		assets: assets2,
-		loading: function (e) {
+		loading: (e)=> {
 			console.log("loading2_" + e.progress)
 		},
 		loaded: createPart2,
@@ -209,8 +207,8 @@ function createPart2() {
 	game.remove(loadingTxt)
 
 	//btn
-	var btn2 = new SINT.SpriteClip(28, 700, 'pic2');
-	btn2.addChild(new SINT.TextClip(60, 56, '卸载'));
+	var btn2 = new SINT.SpriteClip('pic2', 28, 700);
+	btn2.addChild(new SINT.TextClip('卸载', 60, 56));
 	game.add(btn2);
 	btn2.interactive = true;
 	btn2.on('pointerdown', function () {
@@ -219,20 +217,22 @@ function createPart2() {
 		game = new SINT.Game(config);
 		game.preload({
 			assets: assets1,
-			loading: loading,
+			loading: (e) => {
+				loadingTxt.text = Math.floor(e.progress) + '%'
+			},
 			loaded: create,
 		})
 	})
 
 	//icon1
-	var icon1 = new SINT.SpriteClip(28, 900, 'icon1');
+	var icon1 = new SINT.SpriteClip('icon1', 28, 900);
 	game.add(icon1);
-	var icon2 = new SINT.SpriteClip(228, 900, 'icon1');
+	var icon2 = new SINT.SpriteClip('icon1', 228, 900);
 	game.add(icon2);
 	SINT.magic.doDye(icon2, 0x7067c5);
 
 	//Text
-	var t1 = new SINT.TextClip(30, 500, 'Game1 * ->   游戏 ->', {
+	var t1 = new SINT.TextClip('Game1 * ->   游戏 ->', 30, 500, {
 		fontFamily: 'Arial',
 		fontSize: 50,
 		fontStyle: 'italic',
@@ -253,7 +253,7 @@ function createPart2() {
 
 
 	//Animated
-	var ac1 = new SINT.AnimatedClip(600, 400, 'fighter');
+	var ac1 = new SINT.AnimatedClip('fighter', 600, 400);
 	game.add(ac1);
 	ac1.anchor.set(0.5);
 	ac1.animationSpeed = 40 / 60;
@@ -285,7 +285,7 @@ function createPart2() {
 
 
 
-	var ac2 = new SINT.AnimatedClip(600, 600, ['fish1', 'fish2', 'fish3', 'fish4']);
+	var ac2 = new SINT.AnimatedClip(['fish1', 'fish2', 'fish3', 'fish4'], 600, 600);
 	game.add(ac2);
 	ac2.anchor.set(0.5);
 	ac2.animationSpeed = 10 / 60;
